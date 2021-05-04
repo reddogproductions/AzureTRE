@@ -26,3 +26,6 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_MARKDOWN: true
+          VALIDATE_TERRAFORM: true
+          RUN_LOCAL: true
+          
