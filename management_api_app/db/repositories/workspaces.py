@@ -10,6 +10,7 @@ from db.errors import EntityDoesNotExist
 from models.domain.workspace import Workspace
 from db.repositories.base import BaseRepository
 from models.domain.resource import Deployment, Status
+from models.domain.resource_template import ResourceTemplate, Parameter
 from models.schemas.workspace import WorkspaceInCreate
 from db.repositories.workspace_templates import WorkspaceTemplateRepository
 
@@ -22,10 +23,35 @@ class WorkspaceRepository(BaseRepository):
     def _active_workspaces_query():
         return 'SELECT * FROM c WHERE c.resourceType = "workspace" AND c.isDeleted = false'
 
-    def _get_template_version(self, template_name):
+    def _get_current_workspace_template(self, template_name) -> ResourceTemplate:
         workspace_template_repo = WorkspaceTemplateRepository(self._client)
         template = workspace_template_repo.get_current_workspace_template_by_name(template_name)
-        return template.version
+        return template
+
+    @staticmethod
+    def _validate_workspace_parameters(template_parameters: List[Parameter], supplied_request_parameters: dict):
+        # verify all required parameters are given
+        missing_required = []
+        required_parameters = [parameter for parameter in template_parameters if parameter.required]
+        for parameter in required_parameters:
+            if parameter not in supplied_request_parameters:
+                missing_required.append(parameter)
+
+        # verify all given parameters are valid
+        extra_parameters = []
+        wrong_type = []
+        template_parameters_by_name = {parameter.name: parameter for parameter in template_parameters}
+        for parameter in supplied_request_parameters:
+            if parameter not in template_parameters_by_name:
+                extra_parameters.append(parameter)
+            else:
+                template_parameter = template_parameters_by_name[parameter]
+                supplied_parameter_type = type(supplied_request_parameters[parameter])
+                if supplied_parameter_type != template_parameter.type:
+                    wrong_type.append({"parameter": parameter, "expected_type": parameter.type, "supplied_type": supplied_parameter_type})
+
+        # if validation errors, raise validation exception with the right values
+        pass
 
     def get_all_active_workspaces(self) -> List[Workspace]:
         query = self._active_workspaces_query()
@@ -43,7 +69,8 @@ class WorkspaceRepository(BaseRepository):
         full_workspace_id = str(uuid.uuid4())
 
         try:
-            template_version = self._get_template_version(workspace_create.workspaceType)
+            current_template = self._get_current_workspace_template(workspace_create.workspaceType)
+            template_version = current_template.version
         except EntityDoesNotExist:
             raise ValueError(f"The workspace type '{workspace_create.workspaceType}' does not exist")
 
@@ -68,6 +95,8 @@ class WorkspaceRepository(BaseRepository):
             resourceTemplateParameters=resource_spec_parameters,
             deployment=Deployment(status=Status.NotDeployed, message=strings.RESOURCE_STATUS_NOT_DEPLOYED_MESSAGE)
         )
+
+        self._validate_workspace_parameters(current_template.parameters, workspace.resourceTemplateParameters)
 
         return workspace
 
