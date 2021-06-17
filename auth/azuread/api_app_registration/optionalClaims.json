@@ -1,0 +1,46 @@
+{
+    "idToken": [
+        {
+            "name": "sid",
+            "source": null,
+            "essential": false,
+            "additionalProperties": []
+        },
+        {
+            "name": "upn",
+            "source": null,
+            "essential": false,
+            "additionalProperties": [
+                "include_externally_authenticated_upn"
+            ]
+        },
+        {
+            "name": "groups",
+            "source": null,
+            "essential": false,
+            "additionalProperties": []
+        }
+    ],
+    "accessToken": [
+        {
+            "name": "sid",
+            "source": null,
+            "essential": false,
+            "additionalProperties": []
+        },
+        {
+            "name": "upn",
+            "source": null,
+            "essential": false,
+            "additionalProperties": [
+                "include_externally_authenticated_upn"
+            ]
+        },
+        {
+            "name": "groups",
+            "source": null,
+            "essential": false,
+            "additionalProperties": []
+        }
+    ]
+}

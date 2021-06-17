@@ -1,0 +1,24 @@
+[
+    {
+        "allowedMemberTypes": [
+            "User"
+        ],
+        "description": "TRE Users have the ability to load the portal.",
+        "displayName": "TRE-User",
+        "id": "63f683d7-30e9-45bc-8afb-73c72d8117d0",
+        "isEnabled": true,
+        "origin": "Application",
+        "value": "TRE-User"
+    },
+    {
+        "allowedMemberTypes": [
+            "User"
+        ],
+        "description": "TRE Administrators have the ability to create a workspace.",
+        "displayName": "TRE-Administrator",
+        "id": "40add1d7-1d97-40b2-b36c-ac2fb8ba6243",
+        "isEnabled": true,
+        "origin": "Application",
+        "value": "TRE-Administrator"
+    }
+]

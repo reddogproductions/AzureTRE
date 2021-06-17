@@ -1,0 +1,14 @@
+[
+  {
+    "adminConsentDescription": "Execute TRE API calls",
+    "adminConsentDisplayName": "Execute TRE API calls",
+    "id": "b5ccdd54-144b-4467-8f88-943699c792da",
+    "isEnabled": true,
+    "lang": null,
+    "origin": "Application",
+    "type": "Admin",
+    "userConsentDescription": null,
+    "userConsentDisplayName": null,
+    "value": "TRE.Execute"
+  }
+]
